@@ -7,7 +7,7 @@ namespace MovieApi.Models
 {
     public class MovieGenre
     {
-        public int Id { get; set; }
+        //public int Id { get; set; }
         public string MovieId { get; set; }
         public Movie Movies { get; set; }
 
