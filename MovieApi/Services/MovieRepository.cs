@@ -38,13 +38,12 @@ namespace MovieApi.Services
             return "Update done successfully";
         }
 
+        // Returns a list of movies 6 per page
         public async Task<IEnumerable<MoviesToReturn>> GetAllMovies(int pageNumber, int perPage)
         {
             var movieIdAndGenres = new Dictionary<string, List<string>>();
-
             var moviesCollection = await _ctx.Movies.Include(x => x.MovieGenres).ToListAsync();
             var genresCollection = await _ctx.Genres.ToListAsync();
-
             var moviesIdAndGenresId = moviesCollection.SelectMany(x => x.MovieGenres);
 
             var movieAndGenre = moviesIdAndGenresId.Join(genresCollection,
@@ -68,7 +67,6 @@ namespace MovieApi.Services
                     movieIdAndGenres[movie.MovieId].Add(movie.Genre);
                     ;
                 }
-
             }
 
             var result = moviesCollection.Select(movie => new MoviesToReturn

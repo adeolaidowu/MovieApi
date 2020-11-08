@@ -29,7 +29,6 @@ namespace MovieApi.Controllers
             try
             {
                 if (pageNumber <= 0) return BadRequest();
-
                 var movies = await _movieRepository.GetAllMovies(pageNumber, perPage);
                 var count = movies.Count();
 
@@ -38,7 +37,6 @@ namespace MovieApi.Controllers
             catch (Exception e)
             {
                 _logger.LogError(e.Message);
-
                 return BadRequest(e.Message);
             }
         }
