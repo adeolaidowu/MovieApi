@@ -43,6 +43,9 @@ namespace MovieApi
                 .AddEntityFrameworkStores<AppDbContext>()
                 .AddDefaultTokenProviders();
 
+            services.AddScoped<IMovieRepository, MovieRepository>();
+
+
             // JWT token service
             services.AddAuthentication(option =>
             {
