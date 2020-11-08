@@ -17,6 +17,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using MovieApi.Data;
 using MovieApi.Models;
+using MovieApi.Services;
 
 namespace MovieApi
 {
@@ -34,6 +35,9 @@ namespace MovieApi
         {
             services.AddControllers();
             services.AddDbContextPool<AppDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DbConn")));
+
+            services.AddScoped<IMovieRepository, MovieRepository>();
+
             //services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<AppDbContext>();
             //identity service
             services.AddIdentity<User, IdentityRole>(option =>
