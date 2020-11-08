@@ -37,6 +37,55 @@ namespace MovieApi.Services
 
             return "Update done successfully";
         }
+
+        public async Task<IEnumerable<MoviesToReturn>> GetAllMovies(int pageNumber, int perPage)
+        {
+            var movieIdAndGenres = new Dictionary<string, List<string>>();
+
+            var moviesCollection = await _ctx.Movies.Include(x => x.MovieGenres).ToListAsync();
+            var genresCollection = await _ctx.Genres.ToListAsync();
+
+            var moviesIdAndGenresId = moviesCollection.SelectMany(x => x.MovieGenres);
+
+            var movieAndGenre = moviesIdAndGenresId.Join(genresCollection,
+                m => m.GenreId,
+                g => g.GenreId,
+                ((movieGenre, genre) => new
+                {
+                    MovieId = movieGenre.MovieId,
+                    Genre = genre.Name
+
+                }));
+
+            foreach (var movie in movieAndGenre)
+            {
+                if (!movieIdAndGenres.ContainsKey(movie.MovieId))
+                {
+                    movieIdAndGenres[movie.MovieId] = new List<string> { movie.Genre };
+                }
+                else
+                {
+                    movieIdAndGenres[movie.MovieId].Add(movie.Genre);
+                    ;
+                }
+
+            }
+
+            var result = moviesCollection.Select(movie => new MoviesToReturn
+            {
+                MovieId = movie.MovieId,
+                Genres = movieIdAndGenres[movie.MovieId],
+                ReleaseDate = DateTime.Parse(movie.ReleaseDate),
+                Rating = int.Parse(movie.Rating),
+                Description = movie.Description,
+                PhotoUrl = movie.PhotoUrl,
+                Country = movie.Country,
+                Name = movie.Name,
+                TicketPrice = movie.TicketPrice
+
+            });
+            return result.Skip((pageNumber - 1) * perPage).Take(perPage);
+        }
         //This method is what removes a movie from the database.
         public string AddMovie(MovieDTO movie)
         {
