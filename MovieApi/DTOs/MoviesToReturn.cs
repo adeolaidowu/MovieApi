@@ -14,6 +14,6 @@ namespace MovieApi.DTOs
         public string Country { get; set; }
         public string PhotoUrl { get; set; }
 
-        public List<string> MovieGenres { get; set; }
+        public List<string> Genres { get; set; }
     }
 }

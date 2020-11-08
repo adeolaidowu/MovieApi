@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using MovieApi.Models;
+using System;
 
-namespace MovieApi.Models
+namespace MovieApi.DTOs
 {
-    public class Movie
+    public class UpdateMovieDto
     {
-        [Key]
         public string MovieId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
@@ -15,7 +13,6 @@ namespace MovieApi.Models
         public double TicketPrice { get; set; }
         public string Country { get; set; }
         public string PhotoUrl { get; set; }
-
-        public ICollection<MovieGenre> MovieGenres { get; set; }
+        public Genre Genre { get; set; }
     }
 }
