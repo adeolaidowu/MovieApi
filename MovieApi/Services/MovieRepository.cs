@@ -66,5 +66,27 @@ namespace MovieApi.Services
                 return true;
             }
         }
+    
+        // method to get movie by id
+        public Movie GetMovieById(string Id)
+        {
+            var movie = _ctx.Movies.FirstOrDefault(x => x.MovieId == Id);
+            if (movie == null)
+            {
+                return null;
+            }
+            return movie;
+        }
+
+        // method to get all movies
+        public List<Movie> GetAllMovies()
+        {
+            var allmovies = _ctx.Movies.ToList();
+            if (allmovies.Count == 0)
+            {
+                return null;
+            }
+            return allmovies;
+        }
     }
 }

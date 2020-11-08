@@ -51,5 +51,35 @@ namespace MovieApi.Controllers
             }
             return BadRequest();
         }
+    
+        // This action is responsible for fetching movies to the database
+        [HttpGet("GetAllMovies")]
+        public IActionResult GetAllMovies()
+        {
+            var response = _movieRepository.GetAllMovies();
+            if (response != null)
+            {
+                return Ok(response);
+            }
+            else
+            {
+                return BadRequest("error fetching movies");
+            }
+        }
+
+        // This action is responsible for fetching a movie to the database
+        [HttpGet("GetMovie/{id}")]
+        public IActionResult GetMovieById(string Id)
+        {
+            var response = _movieRepository.GetMovieById(Id);
+            if (response != null)
+            {
+                return Ok(response);
+            }
+            else
+            {
+                return BadRequest("error fetching specified movie");
+            }
+        }
     }
 }

@@ -10,5 +10,7 @@ namespace MovieApi.Services
     {
         public string AddMovie(MovieDTO movie);
         public bool RemoveMovie(string Id);
+        public List<Movie> GetAllMovies();
+        public Movie GetMovieById(string Id);    
     }
 }
