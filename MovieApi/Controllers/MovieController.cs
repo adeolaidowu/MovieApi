@@ -23,13 +23,13 @@ namespace MovieApi.Controllers
             _movieRepository = movieRepository;
         }
         // This action updates a movie in the database
-        [HttpPut("{ID}")]
-        public async Task<IActionResult> UpdateMovie([FromBody] UpdateMovieDto model, string ID)
+        [HttpPut("update/{id}")]
+        public async Task<IActionResult> UpdateMovie([FromBody] UpdateMovieDto model, string id)
         {
             if (!ModelState.IsValid) return BadRequest();
             try
             {
-                var result = await _movieRepository.UpdateMovie(model, ID);
+                var result = await _movieRepository.UpdateMovie(model, id);
                 return Ok(new { result });
             }
             catch (Exception e)
@@ -57,6 +57,21 @@ namespace MovieApi.Controllers
 
             }
             return BadRequest("Incomplete data");
+        }
+        // This action is responsible for fetching a movie to the database
+        [HttpGet("GetMovie/{id}")]
+
+        public IActionResult GetMovieById(string Id)
+        {
+            var response = _movieRepository.GetMovieById(Id);
+            if (response != null)
+            {
+                return Ok(response);
+            }
+            else
+            {
+                return BadRequest("error fetching specified movie");
+            }
         }
         // This action is responsible for removing a movie from the database 
         [HttpDelete("RemoveMovie/{Id}")]
