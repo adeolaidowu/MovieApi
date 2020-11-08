@@ -1,8 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MovieApi.Data;
 using MovieApi.DTOs;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace MovieApi.Services
@@ -10,113 +8,32 @@ namespace MovieApi.Services
     public class MovieRepository : IMovieRepository
     {
         private readonly AppDbContext _ctx;
-        private readonly IGenreRepository _genreRepository;
 
-        public MovieRepository(AppDbContext ctx, IGenreRepository genreRepository)
+
+        public MovieRepository(AppDbContext ctx)
         {
             _ctx = ctx;
-            _genreRepository = genreRepository;
         }
 
-        public async Task<IEnumerable<MoviesToReturn>> GetMovies(int pageNumber, int perPage)
+
+        public async Task<string> UpdateMovie(string id, UpdateMovieDto model)
         {
-            var movieIdAndGenres = new Dictionary<string, List<string>>();
+            var movie = await _ctx.Movies.FirstOrDefaultAsync(x => x.MovieId == id);
 
-            var moviesCollection = await _ctx.Movies.Include(x => x.MovieGenres).ToListAsync();
-            var genresCollection = await _genreRepository.FetchGenres();
-
-            var moviesIdAndGenresId = moviesCollection.SelectMany(x => x.MovieGenres);
-
-            var movieAndGenre = moviesIdAndGenresId.Join(genresCollection,
-                m => m.GenreId,
-                g => g.GenreId,
-                ((movieGenre, genre) => new
-                {
-                    MovieId = movieGenre.MovieId,
-                    Genre = genre.Name
-
-                }));
-
-            foreach (var movie in movieAndGenre)
-            {
-                if (!movieIdAndGenres.ContainsKey(movie.MovieId))
-                {
-                    movieIdAndGenres[movie.MovieId] = new List<string> { movie.Genre };
-                }
-                else
-                {
-                    movieIdAndGenres[movie.MovieId].Add(movie.Genre);
-                    ;
-                }
-
-            }
-
-            var result = moviesCollection.Select(movie => new MoviesToReturn
-            {
-                MovieId = movie.MovieId,
-                Genres = movieIdAndGenres[movie.MovieId],
-                ReleaseDate = movie.ReleaseDate,
-                Rating = movie.Rating,
-                Description = movie.Description,
-                PhotoUrl = movie.PhotoUrl,
-                Country = movie.Country,
-                Name = movie.Name,
-                TicketPrice = movie.TicketPrice
-
-            });
-            return result.Skip((pageNumber - 1) * perPage).Take(perPage);
-        }
-
-        public async Task<MoviesToReturn> GetMovieById(string id)
-        {
+            if (movie == null) return "movie not found";
 
 
-            var movieData = await _ctx.Movies.Include(x => x.MovieGenres).FirstOrDefaultAsync(x => x.MovieId == id); ;
-            var movieAndGenre = movieData.MovieGenres;
-            var movieIdAndGenres = new Dictionary<string, List<string>>();
-
-
-            var genresCollection = await _genreRepository.FetchGenres();
+            movie.Country = !string.IsNullOrEmpty(model.Country) ? model.Country : movie.Country;
+            movie.Description = !string.IsNullOrEmpty(model.Description) ? model.Description : movie.Description;
+            movie.Rating = model.Rating > movie.Rating ? model.Rating : movie.Rating;
+            movie.Name = !string.IsNullOrEmpty(model.Name) ? model.Name : movie.Name;
+            movie.TicketPrice = model.TicketPrice > movie.TicketPrice ? model.TicketPrice : movie.TicketPrice;
+            movie.PhotoUrl = !string.IsNullOrEmpty(model.PhotoUrl) ? model.PhotoUrl : movie.PhotoUrl;
+            movie.ReleaseDate = !model.ReleaseDate.Equals(movie.ReleaseDate) ? model.ReleaseDate : movie.ReleaseDate;
 
 
 
-
-            var joinMovieAndGenre = movieAndGenre.Join(genresCollection,
-                x => x.GenreId,
-                y => y.GenreId,
-                ((movie, genre) => new { MovieID = movie.MovieId, Genre = genre.Name }));
-
-
-            foreach (var movie in joinMovieAndGenre)
-            {
-                if (!movieIdAndGenres.ContainsKey(movie.MovieID))
-                {
-                    movieIdAndGenres[movie.MovieID] = new List<string> { movie.Genre };
-                }
-                else
-                {
-                    movieIdAndGenres[movie.MovieID].Add(movie.Genre);
-
-                }
-
-            }
-
-            var result = new MoviesToReturn
-            {
-                MovieId = movieData.MovieId,
-                Genres = movieIdAndGenres[movieData.MovieId],
-                ReleaseDate = movieData.ReleaseDate,
-                Rating = movieData.Rating,
-                Description = movieData.Description,
-                PhotoUrl = movieData.PhotoUrl,
-                Country = movieData.Country,
-                Name = movieData.Name,
-                TicketPrice = movieData.TicketPrice
-
-            };
-
-            return result;
-
+            return "Update done successfully";
         }
 
 

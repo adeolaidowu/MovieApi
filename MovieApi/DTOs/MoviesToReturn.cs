@@ -1,5 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using MovieApi.Models;
+using System;
 
 namespace MovieApi.DTOs
 {
@@ -14,6 +14,6 @@ namespace MovieApi.DTOs
         public string Country { get; set; }
         public string PhotoUrl { get; set; }
 
-        public List<string> Genres { get; set; }
+        public Genre Genres { get; set; }
     }
 }

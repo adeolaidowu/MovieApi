@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace MovieApi.Migrations
 {
-    public partial class InitialMigration : Migration
+    public partial class InitialCreate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -53,7 +53,7 @@ namespace MovieApi.Migrations
                 columns: table => new
                 {
                     GenreId = table.Column<string>(nullable: false),
-                    FirstName = table.Column<string>(nullable: true)
+                    Name = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -67,7 +67,7 @@ namespace MovieApi.Migrations
                     MovieId = table.Column<string>(nullable: false),
                     Name = table.Column<string>(nullable: true),
                     Description = table.Column<string>(nullable: true),
-                    RealeaseDate = table.Column<DateTime>(nullable: false),
+                    ReleaseDate = table.Column<DateTime>(nullable: false),
                     Rating = table.Column<int>(nullable: false),
                     TicketPrice = table.Column<double>(nullable: false),
                     Country = table.Column<string>(nullable: true),
@@ -189,8 +189,7 @@ namespace MovieApi.Migrations
                 columns: table => new
                 {
                     MovieId = table.Column<string>(nullable: false),
-                    GenreId = table.Column<string>(nullable: false),
-                    Id = table.Column<int>(nullable: false)
+                    GenreId = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {

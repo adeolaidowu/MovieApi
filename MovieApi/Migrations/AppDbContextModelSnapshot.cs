@@ -183,7 +183,7 @@ namespace MovieApi.Migrations
                     b.Property<int>("Rating")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("RealeaseDate")
+                    b.Property<DateTime>("ReleaseDate")
                         .HasColumnType("datetime2");
 
                     b.Property<double>("TicketPrice")
@@ -201,9 +201,6 @@ namespace MovieApi.Migrations
 
                     b.Property<string>("GenreId")
                         .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
 
                     b.HasKey("MovieId", "GenreId");
 

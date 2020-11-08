@@ -10,8 +10,8 @@ using MovieApi.Data;
 namespace MovieApi.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20201107133428_PopulateGenre")]
-    partial class PopulateGenre
+    [Migration("20201108160219_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -185,7 +185,7 @@ namespace MovieApi.Migrations
                     b.Property<int>("Rating")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("RealeaseDate")
+                    b.Property<DateTime>("ReleaseDate")
                         .HasColumnType("datetime2");
 
                     b.Property<double>("TicketPrice")
@@ -203,9 +203,6 @@ namespace MovieApi.Migrations
 
                     b.Property<string>("GenreId")
                         .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
 
                     b.HasKey("MovieId", "GenreId");
 
