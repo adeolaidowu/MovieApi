@@ -91,6 +91,7 @@ namespace MovieApi.Controllers
             return BadRequest(model);
         }
 
+
         // User Logout
         [Authorize]
         [HttpPost("logout")]
