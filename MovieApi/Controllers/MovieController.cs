@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Microsoft.AspNetCore.Mvc;
+using MovieApi.Services;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 
 namespace MovieApi.Controllers
 {
@@ -11,5 +8,20 @@ namespace MovieApi.Controllers
     [ApiController]
     public class MovieController : ControllerBase
     {
+        private readonly IMovieRepository _movieRepository;
+        private readonly IGenreRepository _genreRepository;
+
+        public MovieController(IMovieRepository movieRepository, IGenreRepository genreRepository)
+        {
+            _movieRepository = movieRepository;
+            _genreRepository = genreRepository;
+        }
+        [HttpGet]
+        public async Task<IActionResult> GetAllMovies()
+        {
+            var services = new MovieService(_movieRepository, _genreRepository);
+            var result = await services.FetchAllMovies();
+            return Ok(new { result });
+        }
     }
 }

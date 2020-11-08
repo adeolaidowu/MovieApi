@@ -6,18 +6,18 @@ using System.Threading.Tasks;
 
 namespace MovieApi.Services
 {
-    public class MovieRepository : IMovieRepository
+    public class GenreRepository : IGenreRepository
     {
         private readonly AppDbContext _ctx;
 
-        public MovieRepository(AppDbContext ctx)
+        public GenreRepository(AppDbContext ctx)
         {
             _ctx = ctx;
         }
 
-        public async Task<List<Movie>> GetMovies()
+        public async Task<List<Genre>> FetchGenres()
         {
-            return await _ctx.Movies.Include(x => x.MovieGenres).ToListAsync();
+            return await _ctx.Genres.ToListAsync();
         }
     }
 }
