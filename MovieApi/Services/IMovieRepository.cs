@@ -11,6 +11,6 @@ namespace MovieApi.Services
         public bool RemoveMovie(string Id);
         Task<string> UpdateMovie(UpdateMovieDto model, string Id);
         Task<IEnumerable<MoviesToReturn>> GetAllMovies(int pageNumber, int perPage);
-        public Movie GetMovieById(string Id);
+        public MovieDTO GetMovieById(string Id);
     }
 }
