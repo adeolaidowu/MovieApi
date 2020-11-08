@@ -3,6 +3,8 @@ using Microsoft.Extensions.Logging;
 using MovieApi.Data;
 using MovieApi.DTOs;
 using MovieApi.Services;
+using System;
+using System.Threading.Tasks;
 
 namespace MovieApi.Controllers
 {
@@ -19,6 +21,22 @@ namespace MovieApi.Controllers
             _logger = logger;
             _ctx = ctx;
             _movieRepository = movieRepository;
+        }
+        // This action updates a movie in the database
+        [HttpPut("{ID}")]
+        public async Task<IActionResult> UpdateMovie([FromBody] UpdateMovieDto model, string ID)
+        {
+            if (!ModelState.IsValid) return BadRequest();
+            try
+            {
+                var result = await _movieRepository.UpdateMovie(model, ID);
+                return Ok(new { result });
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                return BadRequest(e.Message);
+            }
         }
         // This action is responsible for adding movies to the database
         [HttpPost("AddMovie")]
