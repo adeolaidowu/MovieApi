@@ -17,6 +17,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using MovieApi.Data;
 using MovieApi.Models;
+using MovieApi.Services;
 
 namespace MovieApi
 {
@@ -46,6 +47,9 @@ namespace MovieApi
             })
                 .AddEntityFrameworkStores<AppDbContext>()
                 .AddDefaultTokenProviders();
+
+            services.AddScoped<IMovieRepository, MovieRepository>();
+
 
             // JWT token service
             services.AddAuthentication(option => {
