@@ -74,14 +74,31 @@ namespace MovieApi.Services
         }
 
         // method to get movie by id
-        public Movie GetMovieById(string Id)
+        public MovieDTO GetMovieById(string Id)
         {
             var movie = _ctx.Movies.FirstOrDefault(x => x.MovieId == Id);
-            if (movie == null)
+             if (movie == null)
             {
                 return null;
             }
-            return movie;
+            var genreIds = _ctx.MovieGenres.Where(e => e.MovieId == Id).ToList();
+            var genres = new List<string>();
+            foreach (var id in genreIds)
+            {
+                var genre = _ctx.Genres.FirstOrDefault(a => a.GenreId == id.GenreId);
+                genres.Add(genre.Name);
+            }
+            var movieToReturn = new MovieDTO {
+                Name = movie.Name,
+                Description = movie.Description,
+                ReleaseDate = movie.ReleaseDate,
+                Rating = movie.Rating,
+                TicketPrice = movie.TicketPrice,
+                Country = movie.Country,
+                PhotoUrl = movie.PhotoUrl,
+                Genres = genres
+            };
+            return movieToReturn;
         }
 
         //This method removes movies from the database

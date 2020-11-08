@@ -10,6 +10,6 @@ namespace MovieApi.Services
         public bool RemoveMovie(string Id);
         Task<string> UpdateMovie(UpdateMovieDto model, string Id);
 
-        public Movie GetMovieById(string Id);
+        public MovieDTO GetMovieById(string Id);
     }
 }
