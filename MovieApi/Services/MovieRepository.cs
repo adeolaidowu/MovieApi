@@ -1,9 +1,11 @@
-﻿using MovieApi.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using MovieApi.Data;
 using MovieApi.DTOs;
 using MovieApi.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace MovieApi.Services
 {
@@ -14,6 +16,26 @@ namespace MovieApi.Services
         public MovieRepository(AppDbContext ctx)
         {
             _ctx = ctx;
+        }
+        public async Task<string> UpdateMovie(UpdateMovieDto model, string Id)
+        {
+            var movie = await _ctx.Movies.FirstOrDefaultAsync(x => x.MovieId == Id);
+
+            if (movie == null) return "failed to update movie";
+
+
+            movie.Country = !string.IsNullOrEmpty(model.Country) ? model.Country : movie.Country;
+            movie.Description = !string.IsNullOrEmpty(model.Description) ? model.Description : movie.Description;
+            movie.Rating = movie.Rating;
+            movie.Name = !string.IsNullOrEmpty(model.Name) ? model.Name : movie.Name;
+            movie.TicketPrice = model.TicketPrice > 0 ? model.TicketPrice : movie.TicketPrice;
+            movie.PhotoUrl = !string.IsNullOrEmpty(model.PhotoUrl) ? model.PhotoUrl : movie.PhotoUrl;
+            movie.ReleaseDate = !model.ReleaseDate.Equals(movie.ReleaseDate) ? model.ReleaseDate : movie.ReleaseDate;
+
+            _ctx.Movies.Update(movie);
+            await _ctx.SaveChangesAsync();
+
+            return "Update done successfully";
         }
         //This method is what removes a movie from the database.
         public string AddMovie(MovieDTO movie)
@@ -50,6 +72,18 @@ namespace MovieApi.Services
 
             }
         }
+
+        // method to get movie by id
+        public Movie GetMovieById(string Id)
+        {
+            var movie = _ctx.Movies.FirstOrDefault(x => x.MovieId == Id);
+            if (movie == null)
+            {
+                return null;
+            }
+            return movie;
+        }
+
         //This method removes movies from the database
         public bool RemoveMovie(string Id)
         {

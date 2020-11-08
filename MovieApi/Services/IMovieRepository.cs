@@ -1,7 +1,5 @@
 ﻿using MovieApi.DTOs;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using MovieApi.Models;
 using System.Threading.Tasks;
 
 namespace MovieApi.Services
@@ -10,5 +8,8 @@ namespace MovieApi.Services
     {
         public string AddMovie(MovieDTO movie);
         public bool RemoveMovie(string Id);
+        Task<string> UpdateMovie(UpdateMovieDto model, string Id);
+
+        public Movie GetMovieById(string Id);
     }
 }
