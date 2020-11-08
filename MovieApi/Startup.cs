@@ -29,6 +29,7 @@ namespace MovieApi
             services.AddControllers();
             services.AddDbContextPool<AppDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DbConn")));
             //services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<AppDbContext>();
+            services.AddScoped<IMovieRepository, MovieRepository>();
             //identity service
             services.AddScoped<IMovieRepository, MovieRepository>();
             services.AddIdentity<User, IdentityRole>(option =>
