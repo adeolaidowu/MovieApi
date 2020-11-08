@@ -65,7 +65,6 @@ namespace MovieApi.Services
                 else
                 {
                     movieIdAndGenres[movie.MovieId].Add(movie.Genre);
-                    ;
                 }
             }
 
