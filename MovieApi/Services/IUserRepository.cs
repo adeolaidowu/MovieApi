@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace MovieApi.Services
 {
-    public class IUserRepository
+    interface IUserRepository
     {
     }
 }
