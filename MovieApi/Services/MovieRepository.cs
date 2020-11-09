@@ -72,7 +72,7 @@ namespace MovieApi.Services
             {
                 MovieId = movie.MovieId,
                 Genres = movieIdAndGenres[movie.MovieId],
-                ReleaseDate = DateTime.Parse(movie.ReleaseDate),
+                ReleaseDate = movie.ReleaseDate,
                 Rating = int.Parse(movie.Rating),
                 Description = movie.Description,
                 PhotoUrl = movie.PhotoUrl,

@@ -40,8 +40,8 @@ namespace MovieApi.Migrations
                     LockoutEnd = table.Column<DateTimeOffset>(nullable: true),
                     LockoutEnabled = table.Column<bool>(nullable: false),
                     AccessFailedCount = table.Column<int>(nullable: false),
-                    LastName = table.Column<string>(nullable: false),
-                    FirstName = table.Column<string>(nullable: false)
+                    LastName = table.Column<string>(maxLength: 20, nullable: false),
+                    FirstName = table.Column<string>(maxLength: 20, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -53,7 +53,7 @@ namespace MovieApi.Migrations
                 columns: table => new
                 {
                     GenreId = table.Column<string>(nullable: false),
-                    FirstName = table.Column<string>(nullable: true)
+                    Name = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -67,8 +67,8 @@ namespace MovieApi.Migrations
                     MovieId = table.Column<string>(nullable: false),
                     Name = table.Column<string>(nullable: true),
                     Description = table.Column<string>(nullable: true),
-                    RealeaseDate = table.Column<DateTime>(nullable: false),
-                    Rating = table.Column<int>(nullable: false),
+                    ReleaseDate = table.Column<string>(nullable: true),
+                    Rating = table.Column<string>(nullable: true),
                     TicketPrice = table.Column<double>(nullable: false),
                     Country = table.Column<string>(nullable: true),
                     PhotoUrl = table.Column<string>(nullable: true)
@@ -83,7 +83,7 @@ namespace MovieApi.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                        .Annotation("Sqlite:Autoincrement", true),
                     RoleId = table.Column<string>(nullable: false),
                     ClaimType = table.Column<string>(nullable: true),
                     ClaimValue = table.Column<string>(nullable: true)
@@ -104,7 +104,7 @@ namespace MovieApi.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                        .Annotation("Sqlite:Autoincrement", true),
                     UserId = table.Column<string>(nullable: false),
                     ClaimType = table.Column<string>(nullable: true),
                     ClaimValue = table.Column<string>(nullable: true)
@@ -189,8 +189,7 @@ namespace MovieApi.Migrations
                 columns: table => new
                 {
                     MovieId = table.Column<string>(nullable: false),
-                    GenreId = table.Column<string>(nullable: false),
-                    Id = table.Column<int>(nullable: false)
+                    GenreId = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -218,8 +217,7 @@ namespace MovieApi.Migrations
                 name: "RoleNameIndex",
                 table: "AspNetRoles",
                 column: "NormalizedName",
-                unique: true,
-                filter: "[NormalizedName] IS NOT NULL");
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetUserClaims_UserId",
@@ -245,8 +243,7 @@ namespace MovieApi.Migrations
                 name: "UserNameIndex",
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
-                unique: true,
-                filter: "[NormalizedUserName] IS NOT NULL");
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_MovieGenres_GenreId",

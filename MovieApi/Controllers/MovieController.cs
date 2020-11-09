@@ -25,6 +25,7 @@ namespace MovieApi.Controllers
             _ctx = ctx;
             _movieRepository = movieRepository;
         }
+        [AllowAnonymous]
         [HttpGet("getmovies/{pageNumber?}")]
         public async Task<IActionResult> GetAllMovies(int perPage = 6, int pageNumber = 1)
         {

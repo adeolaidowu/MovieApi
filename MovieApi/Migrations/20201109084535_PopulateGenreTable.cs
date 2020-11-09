@@ -2,7 +2,7 @@
 
 namespace MovieApi.Migrations
 {
-    public partial class PopulateGenre : Migration
+    public partial class PopulateGenreTable : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
