@@ -84,9 +84,9 @@ namespace MovieApi.Services
             return result.Skip((pageNumber - 1) * perPage).Take(perPage);
         }
         //This method is what removes a movie from the database.
-        public string AddMovie(MovieDTO movie)
+        public async Task<string> AddMovie(MovieDTO movie)
         {
-            var film = _ctx.Movies.FirstOrDefault(s => s.Name == movie.Name);
+            var film = await _ctx.Movies.FirstOrDefaultAsync(s => s.Name == movie.Name);
             if (film != null)
             {
                 return null;
@@ -111,8 +111,8 @@ namespace MovieApi.Services
                     PhotoUrl = movie.PhotoUrl,
                     MovieGenres = movieGenres
                 };
-                _ctx.Movies.Add(newMovie);
-                _ctx.SaveChanges();
+                await _ctx.Movies.AddAsync(newMovie);
+                await _ctx.SaveChangesAsync();
 
                 return newMovie.MovieId;
 
@@ -120,21 +120,21 @@ namespace MovieApi.Services
         }
 
         // method to get movie by id
-        public MovieDTO GetMovieById(string Id)
+        public async Task<MovieDTO> GetMovieById(string Id)
         {
             // get specific movie from db
-            var movie = _ctx.Movies.FirstOrDefault(x => x.MovieId == Id);
+            var movie = await _ctx.Movies.FirstOrDefaultAsync(x => x.MovieId == Id);
              if (movie == null)
             {
                 return null;
             }
             // get genreIds from db
-            var genreIds = _ctx.MovieGenres.Where(e => e.MovieId == Id).ToList();
+            var genreIds = await _ctx.MovieGenres.Where(e => e.MovieId == Id).ToListAsync();
             var genres = new List<string>();
             // add genres to genres list
             foreach (var id in genreIds)
             {
-                var genre = _ctx.Genres.FirstOrDefault(a => a.GenreId == id.GenreId);
+                var genre = await _ctx.Genres.FirstOrDefaultAsync(a => a.GenreId == id.GenreId);
                 genres.Add(genre.Name);
             }
             var movieToReturn = new MovieDTO {
@@ -151,10 +151,10 @@ namespace MovieApi.Services
         }
 
         //This method removes movies from the database
-        public bool RemoveMovie(string Id)
+        public async Task<bool> RemoveMovie(string Id)
         {
 
-            var film = _ctx.Movies.FirstOrDefault(x => x.MovieId == Id);
+            var film = await _ctx.Movies.FirstOrDefaultAsync(x => x.MovieId == Id);
             if (film == null)
             {
                 return false;

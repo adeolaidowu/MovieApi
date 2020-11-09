@@ -6,9 +6,11 @@ using MovieApi.Services;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MovieApi.Controllers
 {
+    [Authorize(AuthenticationSchemes = "Bearer")]
     [Route("api/[controller]")]
     [ApiController]
     public class MovieController : ControllerBase
@@ -95,10 +97,10 @@ namespace MovieApi.Controllers
         }
         // This action is responsible for removing a movie from the database 
         [HttpDelete("RemoveMovie/{Id}")]
-        public IActionResult RemoveMovie(string Id)
+        public async Task<IActionResult> RemoveMovie(string Id)
 
         {
-            if (_movieRepository.RemoveMovie(Id))
+            if (await _movieRepository.RemoveMovie(Id))
             {
                 return Ok("success");
             }

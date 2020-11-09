@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AccessApI.DTOs;
 using Groundforce.Common.Utilities.Helpers;
 using Groundforce.Services.DTOs;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -87,6 +88,15 @@ namespace MovieApi.Controllers
             }
 
             return BadRequest(model);
+        }
+
+        // User Logout
+        [Authorize]
+        [HttpPost("logout")]
+        public async Task<IActionResult> Logout()
+        {
+            await _signInManager.SignOutAsync();
+            return Ok("Logged out successfully");
         }
 
     }
