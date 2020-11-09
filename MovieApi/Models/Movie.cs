@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace MovieApi.Models
 {
@@ -17,7 +14,7 @@ namespace MovieApi.Models
         public double TicketPrice { get; set; }
         public string Country { get; set; }
         public string PhotoUrl { get; set; }
-
+        public string OwnerId { get; set; }
         public ICollection<MovieGenre> MovieGenres { get; set; }
     }
 }
