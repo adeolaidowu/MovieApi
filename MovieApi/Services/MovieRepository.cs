@@ -26,11 +26,11 @@ namespace MovieApi.Services
 
             movie.Country = !string.IsNullOrEmpty(model.Country) ? model.Country : movie.Country;
             movie.Description = !string.IsNullOrEmpty(model.Description) ? model.Description : movie.Description;
-            movie.Rating = movie.Rating;
+            movie.Rating = !string.IsNullOrEmpty(model.Rating) ? model.Rating : movie.Rating;
             movie.Name = !string.IsNullOrEmpty(model.Name) ? model.Name : movie.Name;
             movie.TicketPrice = model.TicketPrice > 0 ? model.TicketPrice : movie.TicketPrice;
             movie.PhotoUrl = !string.IsNullOrEmpty(model.PhotoUrl) ? model.PhotoUrl : movie.PhotoUrl;
-            movie.ReleaseDate = !model.ReleaseDate.Equals(movie.ReleaseDate) ? model.ReleaseDate : movie.ReleaseDate;
+            movie.ReleaseDate = !string.IsNullOrEmpty(model.ReleaseDate) ? model.ReleaseDate : movie.ReleaseDate;
 
             _ctx.Movies.Update(movie);
             await _ctx.SaveChangesAsync();
@@ -124,7 +124,7 @@ namespace MovieApi.Services
         {
             // get specific movie from db
             var movie = await _ctx.Movies.FirstOrDefaultAsync(x => x.MovieId == Id);
-             if (movie == null)
+            if (movie == null)
             {
                 return null;
             }
@@ -137,7 +137,8 @@ namespace MovieApi.Services
                 var genre = await _ctx.Genres.FirstOrDefaultAsync(a => a.GenreId == id.GenreId);
                 genres.Add(genre.Name);
             }
-            var movieToReturn = new MovieDTO {
+            var movieToReturn = new MovieDTO
+            {
                 Name = movie.Name,
                 Description = movie.Description,
                 ReleaseDate = movie.ReleaseDate,
