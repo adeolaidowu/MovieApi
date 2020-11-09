@@ -26,7 +26,7 @@ namespace MovieApi.Services
 
             movie.Country = !string.IsNullOrEmpty(model.Country) ? model.Country : movie.Country;
             movie.Description = !string.IsNullOrEmpty(model.Description) ? model.Description : movie.Description;
-            movie.Rating = model.Rating > 0 ? model.Rating.ToString() : movie.Rating;
+            movie.Rating = movie.Rating;
             movie.Name = !string.IsNullOrEmpty(model.Name) ? model.Name : movie.Name;
             movie.TicketPrice = model.TicketPrice > 0 ? model.TicketPrice : movie.TicketPrice;
             movie.PhotoUrl = !string.IsNullOrEmpty(model.PhotoUrl) ? model.PhotoUrl : movie.PhotoUrl;
@@ -125,6 +125,18 @@ namespace MovieApi.Services
 
             }
         }
+
+        // method to get movie by id
+        public Movie GetMovieById(string Id)
+        {
+            var movie = _ctx.Movies.FirstOrDefault(x => x.MovieId == Id);
+            if (movie == null)
+            {
+                return null;
+            }
+            return movie;
+        }
+
         //This method removes movies from the database
         public bool RemoveMovie(string Id)
         {
