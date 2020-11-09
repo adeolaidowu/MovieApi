@@ -32,8 +32,15 @@ namespace MovieApi.Services
             movie.PhotoUrl = !string.IsNullOrEmpty(model.PhotoUrl) ? model.PhotoUrl : movie.PhotoUrl;
             movie.ReleaseDate = !model.ReleaseDate.Equals(movie.ReleaseDate) ? model.ReleaseDate : movie.ReleaseDate;
 
+            var updateMovieGenre = await _ctx.MovieGenres.FirstOrDefaultAsync(x => x.MovieId == movie.MovieId);
+            updateMovieGenre.GenreId = !string.IsNullOrEmpty(model.GenreId) ? model.GenreId : updateMovieGenre.GenreId;
+
             _ctx.Movies.Update(movie);
             await _ctx.SaveChangesAsync();
+
+            _ctx.MovieGenres.Update(updateMovieGenre);
+            await _ctx.SaveChangesAsync();
+
 
             return "Update done successfully";
         }

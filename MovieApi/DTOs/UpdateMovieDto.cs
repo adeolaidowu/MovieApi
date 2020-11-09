@@ -10,5 +10,6 @@
         public double TicketPrice { get; set; }
         public string Country { get; set; }
         public string PhotoUrl { get; set; }
+        public string GenreId { get; set; }
     }
 }
