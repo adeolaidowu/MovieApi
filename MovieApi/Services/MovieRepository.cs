@@ -69,8 +69,8 @@ namespace MovieApi.Services
             });
             return result.Skip((pageNumber - 1) * perPage).Take(perPage);
         }
-        //This method is what removes a movie from the database.
-        public async Task<string> AddMovie(MovieDTO movie)
+        //This method is what add a movie from the database.
+        public async Task<MoviesToReturn> AddMovie(MovieDTO movie)
         {
             var film = await _ctx.Movies.FirstOrDefaultAsync(s => s.Name == movie.Name);
             if (film != null)
@@ -101,7 +101,30 @@ namespace MovieApi.Services
                 await _ctx.Movies.AddAsync(newMovie);
                 await _ctx.SaveChangesAsync();
 
-                return newMovie.MovieId;
+                // build payload to be returned
+                // get genreIds from db
+                var genreIds = await _ctx.MovieGenres.Where(e => e.MovieId == newMovie.MovieId).ToListAsync();
+                var genres = new List<string>();
+                // add genres to genres list
+                foreach (var id in genreIds)
+                {
+                    var genre = await _ctx.Genres.FirstOrDefaultAsync(a => a.GenreId == id.GenreId);
+                    genres.Add(genre.Name);
+                }
+                var movieToReturn = new MoviesToReturn
+                {
+                    MovieId = newMovie.MovieId,
+                    Name = movie.Name,
+                    Description = movie.Description,
+                    ReleaseDate = movie.ReleaseDate,
+                    Rating = int.Parse(movie.Rating),
+                    TicketPrice = movie.TicketPrice,
+                    Country = movie.Country,
+                    PhotoUrl = movie.PhotoUrl,
+                    OwnerId = movie.OwnerId,
+                    Genres = genres
+                };
+                return movieToReturn;
 
             }
         }
