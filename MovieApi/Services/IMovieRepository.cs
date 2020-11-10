@@ -7,7 +7,7 @@ namespace MovieApi.Services
 {
     public interface IMovieRepository
     {
-        Task<string> AddMovie(MovieDTO movie);
+        Task<MoviesToReturn> AddMovie(MovieDTO movie);
         Task<bool> RemoveMovie(string Id);
         Task<string> UpdateMovie(Movie movie);
         Task<IEnumerable<MoviesToReturn>> GetAllMovies(int pageNumber, int perPage);
