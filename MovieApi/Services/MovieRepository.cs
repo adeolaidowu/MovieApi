@@ -95,6 +95,7 @@ namespace MovieApi.Services
                     TicketPrice = movie.TicketPrice,
                     Country = movie.Country,
                     PhotoUrl = movie.PhotoUrl,
+                    OwnerId = movie.OwnerId,
                     MovieGenres = movieGenres
                 };
                 await _ctx.Movies.AddAsync(newMovie);
