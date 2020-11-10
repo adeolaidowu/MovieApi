@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 namespace MovieApi.Controllers
 {
     [Authorize(AuthenticationSchemes = "Bearer")]
-    [Route("api/[controller]")]
+    [Route("api/v1/[controller]")]
     [ApiController]
     public class MovieController : ControllerBase
     {
@@ -30,7 +30,8 @@ namespace MovieApi.Controllers
             _movieRepository = movieRepository;
         }
         [AllowAnonymous]
-        [HttpGet("getmovies/{pageNumber?}")]
+        [HttpGet]
+        [Route("int/{pageNumber?}")]
         public async Task<IActionResult> GetAllMovies(int perPage = 6, int pageNumber = 1)
         {
 
@@ -50,7 +51,8 @@ namespace MovieApi.Controllers
         }
         // This action updates a movie in the database
 
-        [HttpPut("update/{id}")]
+        [HttpPatch]
+        [Route("{id}")]
         public async Task<IActionResult> UpdateMovie([FromBody] UpdateMovieDto model, string id)
 
         {
@@ -117,8 +119,7 @@ namespace MovieApi.Controllers
             }
         }
         // This action is responsible for adding movies to the database
-        [HttpPost("AddMovie")]
-
+        [HttpPost]        
         public IActionResult AddMovie([FromBody] MovieDTO movie)
         {
             if (ModelState.IsValid)
@@ -141,8 +142,7 @@ namespace MovieApi.Controllers
             return BadRequest("Incomplete data");
         }
         // This action is responsible for fetching a movie to the database
-        [HttpGet("GetMovie/{id}")]
-
+        [HttpGet("{id}")]
         public IActionResult GetMovieById(string Id)
         {
             var response = _movieRepository.GetMovieById(Id);
@@ -156,7 +156,8 @@ namespace MovieApi.Controllers
             }
         }
         // This action is responsible for removing a movie from the database 
-        [HttpDelete("RemoveMovie/{Id}")]
+        [HttpDelete]
+        [Route("{Id}")]
         public async Task<IActionResult> RemoveMovie(string Id)
 
         {
