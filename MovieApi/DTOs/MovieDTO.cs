@@ -24,6 +24,8 @@ namespace MovieApi.DTOs
         public double TicketPrice { get; set; }
         [Required]
         public string Country { get; set; }
+        [Required]
+        public string OwnerId { get; set; }
 
         public string PhotoUrl { get; set; }
 

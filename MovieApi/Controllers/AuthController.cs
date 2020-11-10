@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using MovieApi.DTOs;
 using MovieApi.Models;
 
 namespace MovieApi.Controllers
@@ -82,7 +83,13 @@ namespace MovieApi.Controllers
                 if (result.Succeeded)
                 {
                     var getToken = JwtTokenConfig.GetToken(user, _config);
-                    return Ok(getToken);
+                    var Id = user.Id;
+                    var tokenResponse = new TokenResponseDTO
+                    {
+                        Token = getToken,
+                        UserId = Id
+                    };
+                    return Ok(tokenResponse);
                 }
                 return Unauthorized("Invalid credentials");
             }
