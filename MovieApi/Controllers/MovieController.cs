@@ -159,6 +159,24 @@ namespace MovieApi.Controllers
                 return BadRequest("error fetching specified movie");
             }
         }
+
+        // This action is responsible for fetching a movie to the database
+        [AllowAnonymous]
+        [HttpGet("genres")]
+
+        public IActionResult GetAllGenres()
+        {
+            var response = _movieRepository.GetAllGenres();
+            if (response != null)
+            {
+                return Ok(response);
+            }
+            else
+            {
+                return BadRequest("error fetching specified movie");
+            }
+        }
+
         // This action is responsible for removing a movie from the database 
         [HttpDelete("RemoveMovie/{Id}")]
         public async Task<IActionResult> RemoveMovie(string Id)

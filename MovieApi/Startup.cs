@@ -80,7 +80,7 @@ namespace MovieApi
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
-            PreSeeder.Seeder(ctx);
+            PreSeeder.Seeder(ctx).Wait();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
