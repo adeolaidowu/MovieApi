@@ -1,17 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AccessApI.DTOs;
-using Groundforce.Common.Utilities.Helpers;
-using Groundforce.Services.DTOs;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using MovieApi.DTOs;
+using MovieApi.Helper;
 using MovieApi.Models;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace MovieApi.Controllers
 {
@@ -86,8 +82,7 @@ namespace MovieApi.Controllers
                     var Id = user.Id;
                     var tokenResponse = new TokenResponseDTO
                     {
-                        Token = getToken,
-                        UserId = Id
+                        Token = getToken
                     };
                     return Ok(tokenResponse);
                 }

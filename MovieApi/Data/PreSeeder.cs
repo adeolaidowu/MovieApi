@@ -1,11 +1,6 @@
-﻿
-using Microsoft.AspNetCore.Identity;
-using MovieApi.Data;
+﻿using MovieApi.Data;
 using MovieApi.Models;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Groundforce.Services.Data
@@ -22,8 +17,8 @@ namespace Groundforce.Services.Data
             {
                 foreach (var type in Genres)
                 {
-                    ctx.Genres.Add(new Genre { Name = type });
-                    ctx.SaveChanges();
+                    await ctx.Genres.AddAsync(new Genre { Name = type });
+                    await ctx.SaveChangesAsync();
                 }
             }
         }

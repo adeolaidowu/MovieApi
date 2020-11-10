@@ -7,7 +7,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace Groundforce.Common.Utilities.Helpers
+namespace MovieApi.Helper
 {
     public static class JwtTokenConfig
     {
