@@ -221,6 +221,7 @@ namespace MovieApi.Services
                 Rating = movie.Rating,
                 TicketPrice = movie.TicketPrice,
                 Country = movie.Country,
+                OwnerId = movie.OwnerId,
                 PhotoUrl = movie.PhotoUrl,
                 Genres = genres
             };
@@ -231,7 +232,7 @@ namespace MovieApi.Services
         public async Task<bool> RemoveMovieName(string Name)
         {
             Movie film = null;
-            film = await _ctx.Movies.FirstOrDefaultAsync(x => x.Name == Name);
+            film = await _ctx.Movies.FirstOrDefaultAsync(x => x.Name.ToLower() == Name.ToLower());
             if (film == null)
             {
                 return false;
