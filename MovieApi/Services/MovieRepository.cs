@@ -162,6 +162,13 @@ namespace MovieApi.Services
             return movieToReturn;
         }
 
+        // get all genres
+        public async Task<List<Genre>> GetAllGenres()
+        {
+            var genres = await _ctx.Genres.ToListAsync();
+            return genres;
+        }
+
         //This method removes movies from the database
         public async Task<bool> RemoveMovie(string Id)
         {

@@ -12,5 +12,7 @@ namespace MovieApi.Services
         Task<string> UpdateMovie(Movie movie);
         Task<IEnumerable<MoviesToReturn>> GetAllMovies(int pageNumber, int perPage);
         Task<MoviesToReturn> GetMovieById(string Id);
+
+        Task<List<Genre>> GetAllGenres();
     }
 }
