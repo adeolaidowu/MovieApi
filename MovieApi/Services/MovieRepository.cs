@@ -185,5 +185,64 @@ namespace MovieApi.Services
                 return true;
             }
         }
+
+        // This method gets a movie using it's name
+        public async Task<MovieDTO> GetMovieByName(string Name)
+        {
+            Movie movie = null;
+            List<MovieGenre> genreIds = null;
+            List<String> genres = null;
+            Genre genre = null;
+
+            // get specific movie from db
+            movie = await _ctx.Movies.FirstOrDefaultAsync(x => x.Name.ToLower() == Name.ToLower());
+            if (movie == null)
+            {
+                return null;
+            }
+
+            // get genreIds from db
+            genreIds = await _ctx.MovieGenres.Where(e => e.MovieId == movie.MovieId).ToListAsync();
+            genres = new List<string>();
+
+            // add genres to genres list
+            foreach (var id in genreIds)
+            {
+                genre = await _ctx.Genres.FirstOrDefaultAsync(a => a.GenreId == id.GenreId);
+                genres.Add(genre.Name);
+            }
+
+            // create the returned Object
+            var movieToReturn = new MovieDTO
+            {
+                Name = movie.Name,
+                Description = movie.Description,
+                ReleaseDate = movie.ReleaseDate,
+                Rating = movie.Rating,
+                TicketPrice = movie.TicketPrice,
+                Country = movie.Country,
+                OwnerId = movie.OwnerId,
+                PhotoUrl = movie.PhotoUrl,
+                Genres = genres
+            };
+            return movieToReturn;
+        }
+
+        //This method removes movies from the database
+        public async Task<bool> RemoveMovieName(string Name)
+        {
+            Movie film = null;
+            film = await _ctx.Movies.FirstOrDefaultAsync(x => x.Name.ToLower() == Name.ToLower());
+            if (film == null)
+            {
+                return false;
+            }
+            else
+            {
+                _ctx.Movies.Remove(film);
+                _ctx.SaveChanges();
+                return true;
+            }
+        }
     }
 }

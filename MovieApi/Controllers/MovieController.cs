@@ -226,5 +226,44 @@ namespace MovieApi.Controllers
             return false;
 
         }
+
+        // This action is responsible for fetching a movie to the database
+        [HttpGet("GetMovieName/{Name}")]
+
+        public IActionResult GetMovieByName(string Name)
+        {
+            var response = _movieRepository.GetMovieByName(Name);
+            if (response.Result == null)
+            {
+                return BadRequest("error fetching specified movie");
+            }
+            else
+            {
+                return Ok(response);
+            }
+        }
+
+        // This action is responsible for removing a movie from the database
+        // using it's name.
+        [HttpDelete("RemoveMovieName/{Name}")]
+        public async Task<IActionResult> RemoveMovieName(string Name)
+
+        {
+            var userId = VerifyToken(HttpContext);
+
+            var movie = await _movieRepository.GetMovieByName(Name);
+            string movieName = movie.Name;
+
+
+            var isVerified = MatchUserIdOwnerId(userId, movie.OwnerId);
+
+            if (!isVerified) return BadRequest("You are not authorized to delete this movie");
+
+            if (await _movieRepository.RemoveMovieName(Name))
+            {
+                return Ok(movieName + " had been successfully deleted");
+            }
+            return BadRequest();
+        }
     }
 }

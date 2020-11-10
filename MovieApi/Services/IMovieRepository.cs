@@ -14,5 +14,7 @@ namespace MovieApi.Services
         Task<MoviesToReturn> GetMovieById(string Id);
 
         Task<List<Genre>> GetAllGenres();
+        Task<MovieDTO> GetMovieByName(string Name);
+        Task<bool> RemoveMovieName(string Name);
     }
 }
