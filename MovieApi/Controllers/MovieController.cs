@@ -226,5 +226,21 @@ namespace MovieApi.Controllers
             return false;
 
         }
+
+        // This action is responsible for fetching a movie to the database
+        [HttpGet("GetMovieName/{Name}")]
+
+        public IActionResult GetMovieByName(string Name)
+        {
+            var response = _movieRepository.GetMovieByName(Name);
+            if (response.Result == null)
+            {
+                return BadRequest("error fetching specified movie");
+            }
+            else
+            {
+                return Ok(response);
+            }
+        }
     }
 }
