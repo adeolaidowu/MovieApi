@@ -126,16 +126,20 @@ namespace MovieApi.Controllers
                 var userId = VerifyToken(HttpContext);
 
                 var isVerified = MatchUserIdOwnerId(userId, movie.OwnerId);
-
-                var response = _movieRepository.AddMovie(movie);
-                if (response != null)
+                if (isVerified)
                 {
-                    return Ok(response);
+                    var response = _movieRepository.AddMovie(movie);
+                    if (response != null)
+                    {
+                        return Ok(response);
+                    }
+                    else
+                    {
+                        return BadRequest("error adding movie");
+                    }
                 }
-                else
-                {
-                    return BadRequest("error adding movie");
-                }
+                return BadRequest("Cannot add movie");
+               
 
             }
             return BadRequest("Incomplete data");
