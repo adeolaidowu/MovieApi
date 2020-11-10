@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using MovieApi.Data;
 using MovieApi.DTOs;
 using MovieApi.Services;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -52,8 +54,48 @@ namespace MovieApi.Controllers
             if (!ModelState.IsValid) return BadRequest();
             try
             {
-                var result = await _movieRepository.UpdateMovie(model, id);
-                return Ok(new { result });
+                // find movie in database
+                var movie = await _ctx.Movies.FirstOrDefaultAsync(x => x.MovieId == id);
+
+                // confirm movie was found
+                if (movie == null) return BadRequest("failed to update movie");
+
+
+                movie.Country = !string.IsNullOrEmpty(model.Country) ? model.Country : movie.Country;
+                movie.Description = !string.IsNullOrEmpty(model.Description) ? model.Description : movie.Description;
+                movie.Rating = !string.IsNullOrEmpty(model.Rating) ? model.Rating : movie.Rating;
+                movie.Name = !string.IsNullOrEmpty(model.Name) ? model.Name : movie.Name;
+                movie.TicketPrice = model.TicketPrice > 0 ? model.TicketPrice : movie.TicketPrice;
+                movie.PhotoUrl = !string.IsNullOrEmpty(model.PhotoUrl) ? model.PhotoUrl : movie.PhotoUrl;
+                movie.ReleaseDate = !string.IsNullOrEmpty(model.ReleaseDate) ? model.ReleaseDate : movie.ReleaseDate;
+
+                var result = await _movieRepository.UpdateMovie(movie);
+
+                // get genreIds from db
+                var genreIds = await _ctx.MovieGenres.Where(e => e.MovieId == id).ToListAsync();
+                var genres = new List<string>();
+                // add genres to genres list
+                foreach (var Id in genreIds)
+                {
+                    var genre = await _ctx.Genres.FirstOrDefaultAsync(a => a.GenreId == Id.GenreId);
+                    genres.Add(genre.Name);
+                }
+
+
+                //create movie to return as payload
+                var movieToReturn = new MoviesToReturn
+                {
+                    MovieId = movie.MovieId,
+                    Country = !string.IsNullOrEmpty(model.Country) ? model.Country : movie.Country,
+                    Description = !string.IsNullOrEmpty(model.Description) ? model.Description : movie.Description,
+                    Rating = !string.IsNullOrEmpty(model.Rating) ? Int32.Parse(model.Rating) : Int32.Parse(movie.Rating),
+                    Name = !string.IsNullOrEmpty(model.Name) ? model.Name : movie.Name,
+                    TicketPrice = model.TicketPrice > 0 ? model.TicketPrice : movie.TicketPrice,
+                    PhotoUrl = !string.IsNullOrEmpty(model.PhotoUrl) ? model.PhotoUrl : movie.PhotoUrl,
+                    ReleaseDate = !string.IsNullOrEmpty(model.ReleaseDate) ? model.ReleaseDate : movie.ReleaseDate,
+                    Genres = genres
+                };
+                return Ok(movieToReturn);
             }
             catch (Exception e)
             {
