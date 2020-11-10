@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace MovieApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v1/[controller]")]
     [ApiController]
     public class AuthController : ControllerBase
     {
@@ -58,7 +58,7 @@ namespace MovieApi.Controllers
                 return BadRequest(ModelState);
             }
 
-            return Ok("User Successfully created");
+            return Ok(user);
 
         }
 
