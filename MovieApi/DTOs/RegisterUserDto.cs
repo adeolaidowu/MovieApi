@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace AccessApI.DTOs
+namespace MovieApi.DTOs
 {
     public class RegisterUserDto
     {
@@ -16,7 +12,7 @@ namespace AccessApI.DTOs
         [Required(ErrorMessage = "Last name is required")]
         [MaxLength(20)]
         public string LastName { get; set; }
-        
+
         [Required(ErrorMessage = "Password can not be more than 10")]
         [MaxLength(10)]
         [MinLength(4)]

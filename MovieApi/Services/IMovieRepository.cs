@@ -1,6 +1,6 @@
 ﻿using MovieApi.DTOs;
-using System.Collections.Generic;
 using MovieApi.Models;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace MovieApi.Services
@@ -11,6 +11,6 @@ namespace MovieApi.Services
         Task<bool> RemoveMovie(string Id);
         Task<string> UpdateMovie(Movie movie);
         Task<IEnumerable<MoviesToReturn>> GetAllMovies(int pageNumber, int perPage);
-        Task<MovieDTO> GetMovieById(string Id);
+        Task<MoviesToReturn> GetMovieById(string Id);
     }
 }

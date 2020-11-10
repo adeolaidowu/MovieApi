@@ -107,7 +107,7 @@ namespace MovieApi.Services
         }
 
         // method to get movie by id
-        public async Task<MovieDTO> GetMovieById(string Id)
+        public async Task<MoviesToReturn> GetMovieById(string Id)
         {
             // get specific movie from db
             var movie = await _ctx.Movies.FirstOrDefaultAsync(x => x.MovieId == Id);
@@ -124,15 +124,16 @@ namespace MovieApi.Services
                 var genre = await _ctx.Genres.FirstOrDefaultAsync(a => a.GenreId == id.GenreId);
                 genres.Add(genre.Name);
             }
-            var movieToReturn = new MovieDTO
+            var movieToReturn = new MoviesToReturn
             {
                 Name = movie.Name,
                 Description = movie.Description,
                 ReleaseDate = movie.ReleaseDate,
-                Rating = movie.Rating,
+                Rating = int.Parse(movie.Rating),
                 TicketPrice = movie.TicketPrice,
                 Country = movie.Country,
                 PhotoUrl = movie.PhotoUrl,
+                OwnerId = movie.OwnerId,
                 Genres = genres
             };
             return movieToReturn;

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace MovieApi.DTOs
 {
@@ -13,6 +12,7 @@ namespace MovieApi.DTOs
         public double TicketPrice { get; set; }
         public string Country { get; set; }
         public string PhotoUrl { get; set; }
+        public string OwnerId { get; set; }
 
         public List<string> Genres { get; set; }
     }

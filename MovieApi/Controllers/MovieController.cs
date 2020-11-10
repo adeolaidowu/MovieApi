@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -7,6 +8,7 @@ using MovieApi.DTOs;
 using MovieApi.Services;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -31,6 +33,7 @@ namespace MovieApi.Controllers
         [HttpGet("getmovies/{pageNumber?}")]
         public async Task<IActionResult> GetAllMovies(int perPage = 6, int pageNumber = 1)
         {
+
             try
             {
                 if (pageNumber <= 0) return BadRequest();
@@ -51,6 +54,9 @@ namespace MovieApi.Controllers
         public async Task<IActionResult> UpdateMovie([FromBody] UpdateMovieDto model, string id)
 
         {
+            var userId = VerifyToken(HttpContext);
+
+
             if (!ModelState.IsValid) return BadRequest();
             try
             {
@@ -59,6 +65,13 @@ namespace MovieApi.Controllers
 
                 // confirm movie was found
                 if (movie == null) return BadRequest("failed to update movie");
+
+                var isVerified = MatchUserIdOwnerId(userId, movie.OwnerId);
+
+                if (!isVerified)
+                {
+                    return BadRequest("You are not authorized to update this movie");
+                }
 
 
                 movie.Country = !string.IsNullOrEmpty(model.Country) ? model.Country : movie.Country;
@@ -110,6 +123,10 @@ namespace MovieApi.Controllers
         {
             if (ModelState.IsValid)
             {
+                var userId = VerifyToken(HttpContext);
+
+                var isVerified = MatchUserIdOwnerId(userId, movie.OwnerId);
+
                 var response = _movieRepository.AddMovie(movie);
                 if (response != null)
                 {
@@ -143,11 +160,49 @@ namespace MovieApi.Controllers
         public async Task<IActionResult> RemoveMovie(string Id)
 
         {
+            var userId = VerifyToken(HttpContext);
+
+            var movie = await _movieRepository.GetMovieById(Id);
+
+
+
+            var isVerified = MatchUserIdOwnerId(userId, movie.OwnerId);
+
+            if (!isVerified) return BadRequest("You are not authorized to delete this movie");
+
             if (await _movieRepository.RemoveMovie(Id))
             {
                 return Ok("success");
             }
             return BadRequest();
+        }
+
+        private string VerifyToken(HttpContext context)
+        {
+            var token = context.Request.Headers["Authorization"].ToString().Split(" ")[1];
+            var handler = new JwtSecurityTokenHandler();
+
+            var claims = handler.ReadJwtToken(token).Claims.Take(1);
+            string userId = string.Empty;
+            foreach (var claim in claims)
+            {
+                userId += claim.Value;
+            }
+
+
+            return userId;
+        }
+
+        private static bool MatchUserIdOwnerId(string userId, string ownerId)
+        {
+            if (userId == ownerId)
+            {
+                return true;
+
+            }
+
+            return false;
+
         }
     }
 }
