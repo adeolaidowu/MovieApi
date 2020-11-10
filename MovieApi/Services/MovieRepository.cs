@@ -225,7 +225,23 @@ namespace MovieApi.Services
                 Genres = genres
             };
             return movieToReturn;
+        }
 
+        //This method removes movies from the database
+        public async Task<bool> RemoveMovieName(string Name)
+        {
+            Movie film = null;
+            film = await _ctx.Movies.FirstOrDefaultAsync(x => x.Name == Name);
+            if (film == null)
+            {
+                return false;
+            }
+            else
+            {
+                _ctx.Movies.Remove(film);
+                _ctx.SaveChanges();
+                return true;
+            }
         }
     }
 }
