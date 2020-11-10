@@ -1,6 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using CloudinaryDotNet.Actions;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using MovieApi.Data;
 using MovieApi.DTOs;
+using MovieApi.Helper;
 using MovieApi.Models;
 using System;
 using System.Collections.Generic;
@@ -12,10 +16,14 @@ namespace MovieApi.Services
     public class MovieRepository : IMovieRepository
     {
         private readonly AppDbContext _ctx;
+        private readonly UploadToCloudinary _UploadToCloudinary;
 
-        public MovieRepository(AppDbContext ctx)
+
+        public MovieRepository(AppDbContext ctx, IOptions<CloudinarySettings> cloudinary)
         {
             _ctx = ctx;
+            _UploadToCloudinary = new UploadToCloudinary(cloudinary);
+
         }
         public async Task<string> UpdateMovie(Movie movie)
         {
@@ -69,13 +77,33 @@ namespace MovieApi.Services
             });
             return result.Skip((pageNumber - 1) * perPage).Take(perPage);
         }
-        //This method is what removes a movie from the database.
+
+        //This method is what adds a movie from the database.
         public async Task<string> AddMovie(MovieDTO movie)
         {
-            var film = await _ctx.Movies.FirstOrDefaultAsync(s => s.Name == movie.Name);
+            // instance of an imageUploadResult class
+            ImageUploadResult uploadResult; /*= new ImageUploadResult();*/ 
+
+            var film = await _ctx.Movies.FirstOrDefaultAsync(s => s.Name.ToLower() == movie.Name.ToLower());
+
+            //gets the photo url for the movie
+            var file = movie.PhotoUrl;
+
+
+            //checks if the filelength is greater than zero
+            if (file.Length > 0)
+            {
+                //calls the method that handles uploading photo to cloudinary
+                 uploadResult = await _UploadToCloudinary.UploadPhoto(file);
+            }
+            else
+            {
+                return "No photo to upload";
+            }
+
             if (film != null)
             {
-                return null;
+                return "Movie already exists";
             }
             else
             {
@@ -86,31 +114,33 @@ namespace MovieApi.Services
                 }
 
                 var newMovie = new Movie
-                {// The movieDTo is used to populate the database
-                    MovieId = Guid.NewGuid().ToString(),// The guid method is used to create Id for the MovieId
-                    Name = movie.Name,
-                    Description = movie.Description,
-                    ReleaseDate = movie.ReleaseDate,
-                    Rating = movie.Rating,
-                    TicketPrice = movie.TicketPrice,
-                    Country = movie.Country,
-                    PhotoUrl = movie.PhotoUrl,
-                    OwnerId = movie.OwnerId,
-                    MovieGenres = movieGenres
-                };
-                await _ctx.Movies.AddAsync(newMovie);
-                await _ctx.SaveChangesAsync();
+            {
+                // The movieDTo is used to populate the database
+                MovieId = Guid.NewGuid().ToString(),// The guid method is used to create Id for the MovieId
+                Name = movie.Name,
+                Description = movie.Description,
+                ReleaseDate = movie.ReleaseDate,
+                Rating = movie.Rating,
+                TicketPrice = movie.TicketPrice,
+                Country = movie.Country,
+                PhotoUrl = uploadResult.Url.ToString(),
+                OwnerId = movie.OwnerId,
+                MovieGenres = movieGenres
+            };
+            await _ctx.Movies.AddAsync(newMovie);
+            await _ctx.SaveChangesAsync();
 
-                return newMovie.MovieId;
+            return newMovie.MovieId;
 
             }
         }
 
         // method to get movie by id
-        public async Task<MovieDTO> GetMovieById(string Id)
+        public async Task<MoviesToReturn> GetMovieById(string Id)
         {
             // get specific movie from db
             var movie = await _ctx.Movies.FirstOrDefaultAsync(x => x.MovieId == Id);
+
             if (movie == null)
             {
                 return null;
@@ -124,16 +154,17 @@ namespace MovieApi.Services
                 var genre = await _ctx.Genres.FirstOrDefaultAsync(a => a.GenreId == id.GenreId);
                 genres.Add(genre.Name);
             }
-            var movieToReturn = new MovieDTO
+            var movieToReturn = new MoviesToReturn
             {
-                Name = movie.Name,
-                Description = movie.Description,
+                MovieId = movie.MovieId,
+                Genres = genres,
                 ReleaseDate = movie.ReleaseDate,
-                Rating = movie.Rating,
-                TicketPrice = movie.TicketPrice,
-                Country = movie.Country,
+                Rating = int.Parse(movie.Rating),
+                Description = movie.Description,
                 PhotoUrl = movie.PhotoUrl,
-                Genres = genres
+                Country = movie.Country,
+                Name = movie.Name,
+                TicketPrice = movie.TicketPrice
             };
             return movieToReturn;
         }

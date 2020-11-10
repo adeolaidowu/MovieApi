@@ -52,7 +52,6 @@ namespace MovieApi.Controllers
             };
 
             var result = await _userManager.CreateAsync(user, model.Password);
-
             if (!result.Succeeded)
             {
                 foreach (var err in result.Errors)
@@ -62,7 +61,8 @@ namespace MovieApi.Controllers
                 return BadRequest(ModelState);
             }
 
-            return Ok("User Successfully created");
+            var success = "User Successfully created";
+            return Ok(new { success, model});
 
         }
 

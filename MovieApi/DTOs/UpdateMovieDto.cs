@@ -1,4 +1,6 @@
-﻿namespace MovieApi.DTOs
+﻿using Microsoft.AspNetCore.Http;
+
+namespace MovieApi.DTOs
 {
     public class UpdateMovieDto
     {
@@ -9,6 +11,6 @@
         public string Rating { get; set; }
         public double TicketPrice { get; set; }
         public string Country { get; set; }
-        public string PhotoUrl { get; set; }
+        public IFormFile PhotoUrl { get; set; }
     }
 }

@@ -1,4 +1,5 @@
-﻿using MovieApi.Models;
+﻿using Microsoft.AspNetCore.Http;
+using MovieApi.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -26,8 +27,8 @@ namespace MovieApi.DTOs
         public string Country { get; set; }
         [Required]
         public string OwnerId { get; set; }
-
-        public string PhotoUrl { get; set; }
+        [Required]
+        public IFormFile PhotoUrl { get; set; }
 
         public MovieDTO()
         {
