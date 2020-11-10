@@ -142,7 +142,8 @@ namespace MovieApi.Controllers
             return BadRequest("Incomplete data");
         }
         // This action is responsible for fetching a movie to the database
-        [HttpGet("{id}")]
+        [HttpGet("GetMovie/{id}")]
+
         public IActionResult GetMovieById(string Id)
         {
             var response = _movieRepository.GetMovieById(Id);
