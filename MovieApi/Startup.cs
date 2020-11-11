@@ -30,8 +30,7 @@ namespace MovieApi
             services.AddControllers();
             services.AddDbContextPool<AppDbContext>(options => options.UseSqlite(Configuration.GetConnectionString("DbConn")));
             //services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<AppDbContext>();
-            services.AddScoped<IMovieRepository, MovieRepository>();
-            //identity service
+            services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IMovieRepository, MovieRepository>();
             services.AddIdentity<User, IdentityRole>(option =>
             {
