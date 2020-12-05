@@ -15,6 +15,7 @@ namespace MovieApi.Models
         [Required(ErrorMessage = "First name is required")]
         [MaxLength(20)]
         public string FirstName { get; set; }
+        public string IpAddress { get; set; }
 
     }
 }
