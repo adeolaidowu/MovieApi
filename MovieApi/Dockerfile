@@ -14,4 +14,5 @@ WORKDIR /app
 EXPOSE 5000
 COPY --from=build /app/MovieApi.db .
 COPY --from=build /app/publish .
-ENTRYPOINT ["dotnet", "MovieApi.dll"]
+#ENTRYPOINT ["dotnet", "MovieApi.dll"]
+CMD ASPNETCORE_URLS=http://*:$PORT dotnet MovieApi.dll
