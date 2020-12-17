@@ -106,6 +106,7 @@ namespace MovieApi
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Movie Api V1");
             });
+            app.UseCors(x => x.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
             app.UseHttpsRedirection();
 
             app.UseRouting();
